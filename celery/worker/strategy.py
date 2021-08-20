@@ -195,6 +195,7 @@ def default(task, app, consumer,
             call_at(eta, apply_eta_task, (req,), priority=6)
             return task_message_handler
         if bucket:
+            consumer.qos.increment_eventually()
             return limit_task(req, bucket, 1)
 
         task_reserved(req)

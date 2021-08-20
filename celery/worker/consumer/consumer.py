@@ -269,6 +269,7 @@ class Consumer(object):
     def _limit_move_to_pool(self, request):
         task_reserved(request)
         self.on_task_request(request)
+        self.qos.decrement_eventually()
 
     def _schedule_bucket_request(self, bucket):
         while True:
@@ -299,7 +300,6 @@ class Consumer(object):
         return self._schedule_bucket_request(bucket)
 
     def _limit_post_eta(self, request, bucket, tokens):
-        self.qos.decrement_eventually()
         bucket.add((request, tokens))
         return self._schedule_bucket_request(bucket)
 
